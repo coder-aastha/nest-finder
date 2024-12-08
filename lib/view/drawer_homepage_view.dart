@@ -125,8 +125,8 @@ class DrawerHomepageView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _buildExperienceCard("16+", "Years of Experience"),
-                  _buildExperienceCard("16+", "Years of Experience"),
-                  _buildExperienceCard("16+", "Years of Experience"),
+                  _buildExperienceCard("200+", "Award Gained"),
+                  _buildExperienceCard("999+", "Property Ready"),
                 ],
               ),
             ),
