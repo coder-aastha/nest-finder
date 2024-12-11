@@ -131,3 +131,49 @@ class _OnboardingViewState extends State<OnboardingView> {
                 ),
               ),
             )
+          : Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              height: 80,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                      onPressed: () => controller.jumpToPage(2),
+                      child: const Text("SKIP")),
+                  Center(
+                      child: SmoothPageIndicator(
+                    controller: controller,
+                    count: 3,
+                    effect: const WormEffect(
+                      spacing: 16,
+                      dotColor: Colors.black26,
+                      activeDotColor: Color.fromARGB(255, 39, 182, 168),
+                    ),
+                    onDotClicked: (index) {
+                      if (index >= 0 && index < 3) {
+                        controller.animateToPage(
+                          index,
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeIn,
+                        );
+                      }
+                    },
+                  )),
+                  TextButton(
+                      onPressed: () {
+                        if (_currentPage < 2) {
+                          controller.nextPage(
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.easeInOut,
+                          );
+                        }
+                      },
+                      child: const Text("NEXT")),
+                ],
+              ),
+            ),
+    );
+  }
+}
