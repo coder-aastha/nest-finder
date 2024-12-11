@@ -110,3 +110,24 @@ class _OnboardingViewState extends State<OnboardingView> {
           ],
         ),
       ),
+      bottomSheet: isLastPage
+          ? Padding(
+              padding:
+                  const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 30.0),
+              child: TextButton(
+                style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    backgroundColor: Colors.teal,
+                    minimumSize: const Size.fromHeight(80)),
+                onPressed: () async {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const LoginPageView()));
+                },
+                child: const Text(
+                  "Get Started",
+                  style: TextStyle(fontSize: 24, color: Colors.white),
+                ),
+              ),
+            )
