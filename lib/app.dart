@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: AnimatedSplashScreen(
-        splash: 'assets/images/nestfinder_animated_logo.gif',
+        splash: 'assets/images/splash_screen/nestfinder_animated_logo.gif',
         splashIconSize: 1500.0,
         centered: true,
         nextScreen: const OnboardingView(),
