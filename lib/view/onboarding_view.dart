@@ -127,7 +127,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                 },
                 child: const Text(
                   "Get Started",
-                  style: TextStyle(fontSize: 24, color: Colors.white),
+                  style: TextStyle(fontSize: 24, color: Colors.white, fontFamily: "Montserrat Bold"),
                 ),
               ),
             )
