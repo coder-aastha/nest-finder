@@ -146,7 +146,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                 child: Text(
                   "Get Started",
                   style: TextStyle(
-                    fontSize: fontSize + 6, // Slightly larger font for the button text
+                    fontSize: fontSize, // Slightly larger font for the button text
                     color: Colors.white,
                     fontFamily: "Montserrat Bold",
                   ),

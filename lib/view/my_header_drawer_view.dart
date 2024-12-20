@@ -10,17 +10,20 @@ class MyHeaderDrawerView extends StatefulWidget {
 class _MyHeaderDrawerViewState extends State<MyHeaderDrawerView> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    bool isTablet = screenWidth > 768;
+
     return Container(
       color: const Color.fromARGB(255, 212, 164, 20),
       width: double.infinity,
-      height: 200,
-      padding: const EdgeInsets.only(top: 20.0),
+      height: isTablet ? 250 : 200,
+      padding: EdgeInsets.only(top: isTablet ? 30.0 : 20.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            margin:  const EdgeInsets.only(bottom: 10),
-            height: 70,
+            margin: EdgeInsets.only(bottom: isTablet ? 15 : 10),
+            height: isTablet ? 90 : 70,
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
@@ -28,11 +31,12 @@ class _MyHeaderDrawerViewState extends State<MyHeaderDrawerView> {
               ),
             ),
           ),
-          const Text(
+          Text(
             "aastha2@gmail.com",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 14,
+              fontSize: isTablet ? 16 : 14,
+              fontWeight: isTablet ? FontWeight.w500 : FontWeight.normal,
             ),
           ),
         ],

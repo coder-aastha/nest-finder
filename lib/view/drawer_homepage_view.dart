@@ -25,16 +25,16 @@ class _HomePageViewState extends State<DrawerHomepageView> {
       appBar: AppBar(
         title: const Text("Nest Finder"),
         // Use Builder to get the right context for Scaffold.of(context)
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer(); // Opens the drawer
-              },
-            );
-          },
-        ),
+        // leading: Builder(
+        //   builder: (BuildContext context) {
+        //     return IconButton(
+        //       icon: const Icon(Icons.menu),
+        //       onPressed: () {
+        //         Scaffold.of(context).openDrawer(); // Opens the drawer
+        //       },
+        //     );
+        //   },
+        // ),
       ),
       body: container, // This will display the widget based on currentPage
       drawer: Drawer(
@@ -61,8 +61,6 @@ class _HomePageViewState extends State<DrawerHomepageView> {
         return const ContactPageView(); // Show contact page when contact is selected
       case DrawerSection.agents:
         return const AgentPageView(); // Show agent page when agents is selected
-      default:
-        return const HomepageView(); // Default page (should not happen)
     }
   }
 
