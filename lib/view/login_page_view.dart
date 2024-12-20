@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nest_finder/view/homepage_view.dart';
 import 'package:nest_finder/view/signup_page_view.dart'; // Import SignUpPageView to check stored credentials
-
-import 'home_page_view.dart'; // Import HomePageView to navigate after successful login
 
 class LoginPageView extends StatefulWidget {
   const LoginPageView({super.key});
@@ -44,13 +43,16 @@ class LoginPageViewState extends State<LoginPageView> {
 
   @override
   Widget build(BuildContext context) {
-    double fontSize = getFontSize(context); // Get the appropriate font size for the screen
-    double spacingHeight = getSpacingHeight(context); // Get the appropriate spacing height
+    double fontSize =
+        getFontSize(context); // Get the appropriate font size for the screen
+    double spacingHeight =
+        getSpacingHeight(context); // Get the appropriate spacing height
 
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 30.0),
+          padding: const EdgeInsets.only(
+              left: 16.0, right: 16.0, bottom: 16.0, top: 30.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -69,7 +71,9 @@ class LoginPageViewState extends State<LoginPageView> {
                   ),
                 ),
               ),
-              SizedBox(height: spacingHeight), // Use dynamic spacing here based on device type
+              SizedBox(
+                  height:
+                      spacingHeight), // Use dynamic spacing here based on device type
 
               // Welcome text
               Text(
@@ -231,7 +235,7 @@ class LoginPageViewState extends State<LoginPageView> {
         // Navigate to the HomePageView after successful login
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomePageView()),
+          MaterialPageRoute(builder: (context) => const HomepageView()),
         );
       } else {
         setState(() {

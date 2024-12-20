@@ -2,25 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:nest_finder/view/aboutpage_view.dart';
 import 'package:nest_finder/view/agentpage_view.dart';
 import 'package:nest_finder/view/contactpage_view.dart';
-import 'package:nest_finder/view/drawer_homepage_view.dart';
-import 'package:nest_finder/view/my_header_drawer_view.dart'; // Assuming this import is correct
+import 'package:nest_finder/view/homepage_view.dart';
+import 'package:nest_finder/view/my_header_drawer_view.dart';
 
-class HomePageView extends StatefulWidget {
-  const HomePageView({super.key});
+class DrawerHomePageView extends StatefulWidget {
+  const DrawerHomePageView({super.key});
 
   @override
-  State<HomePageView> createState() => _HomePageViewState();
+  State<DrawerHomePageView> createState() => _DrawerHomePageViewState();
 }
 
-class _HomePageViewState extends State<HomePageView> {
+class _DrawerHomePageViewState extends State<DrawerHomePageView> {
   // The variable to hold the current page (selected drawer item)
   DrawerSection currentPage = DrawerSection.home;
 
   @override
   Widget build(BuildContext context) {
-    var container;
+    // Use MediaQuery to get the screen width
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    // Decide container width based on screen size
+    double containerWidth = screenWidth > 600 ? 600 : screenWidth;
+
+    // The body widget (currentPage) that gets updated when a drawer item is tapped
+    StatelessWidget container = const HomepageView(); // Default value
     if (currentPage == DrawerSection.home) {
-      container = const DrawerHomepageView();
+      container = const HomepageView();
     } else if (currentPage == DrawerSection.about) {
       container = const AboutpageView();
     } else if (currentPage == DrawerSection.contact) {
@@ -28,17 +35,23 @@ class _HomePageViewState extends State<HomePageView> {
     } else if (currentPage == DrawerSection.agents) {
       container = const AgentPageView();
     }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Nest Finder"),
       ),
-      body: container,
+      body: Center(
+        child: SizedBox(
+          width: containerWidth, // Set width based on screen size
+          child: container,
+        ),
+      ),
       drawer: Drawer(
         child: SingleChildScrollView(
           child: Column(
             children: [
               const MyHeaderDrawerView(),
-              MyDrawerListView(), // Drawer list view
+              myDrawerListView(), // Drawer list view
             ],
           ),
         ),
@@ -47,7 +60,7 @@ class _HomePageViewState extends State<HomePageView> {
   }
 
   // The DrawerListView that contains the list of items in the Drawer
-  Widget MyDrawerListView() {
+  Widget myDrawerListView() {
     return Container(
       padding: const EdgeInsets.only(top: 15),
       child: Column(
@@ -57,29 +70,25 @@ class _HomePageViewState extends State<HomePageView> {
             1,
             "Home",
             Icons.home_max_outlined,
-            currentPage ==
-                DrawerSection.home, // Check if it's the selected page
+            currentPage == DrawerSection.home, // Check if it's the selected page
           ),
           menuItem(
             2,
             "About",
             Icons.info_outline,
-            currentPage ==
-                DrawerSection.about, // Check if it's the selected page
+            currentPage == DrawerSection.about, // Check if it's the selected page
           ),
           menuItem(
             3,
             "Contact",
             Icons.contact_mail_outlined,
-            currentPage ==
-                DrawerSection.contact, // Check if it's the selected page
+            currentPage == DrawerSection.contact, // Check if it's the selected page
           ),
           menuItem(
             4,
             "Agent",
             Icons.account_box_outlined,
-            currentPage ==
-                DrawerSection.agents, // Check if it's the selected page
+            currentPage == DrawerSection.agents, // Check if it's the selected page
           ),
         ],
       ),

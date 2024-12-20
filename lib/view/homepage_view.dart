@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class DrawerHomepageView extends StatelessWidget {
-  const DrawerHomepageView({super.key});
+class HomepageView extends StatelessWidget {
+  const HomepageView({super.key});
 
   @override
   Widget build(BuildContext context) {
