@@ -35,10 +35,23 @@ class _OnboardingViewState extends State<OnboardingView> {
     super.dispose();
   }
 
+  // Method to determine the font size based on screen width
+  double getFontSize(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    if (screenWidth > 600) {
+      // iPad or larger tablets (Landscape or iPad-like devices)
+      return 36.0;
+    } else {
+      // Mobile devices
+      return 30.0;
+    }
+  }
+
   Widget buildPage({
     required String urlImage,
     required String title,
     required String subtitle,
+    required double fontSize,
   }) =>
       Container(
         color: Colors.white,
@@ -59,7 +72,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                 title,
                 style: TextStyle(
                     color: Colors.blue.shade200,
-                    fontSize: 30,
+                    fontSize: fontSize,
                     fontWeight: FontWeight.bold),
               ),
             ),
@@ -82,6 +95,8 @@ class _OnboardingViewState extends State<OnboardingView> {
 
   @override
   Widget build(BuildContext context) {
+    double fontSize = getFontSize(context); // Get the appropriate font size for the screen
+
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.only(bottom: 80),
@@ -94,19 +109,22 @@ class _OnboardingViewState extends State<OnboardingView> {
                     "assets/images/on_boarding_images/onboarding_image1.png",
                 title: "Welcome to Your New Home Journey!",
                 subtitle:
-                    "Discover a world of beautiful homes and exciting opportunities. Let us guide you through every step of the way."),
+                    "Discover a world of beautiful homes and exciting opportunities. Let us guide you through every step of the way.",
+                fontSize: fontSize),
             buildPage(
                 urlImage:
                     "assets/images/on_boarding_images/onboarding_image2.png",
                 title: "Find Your Dream Home",
                 subtitle:
-                    "Browse through our curated listings of stunning properties available for sale. Your perfect home is just a click away."),
+                    "Browse through our curated listings of stunning properties available for sale. Your perfect home is just a click away.",
+                fontSize: fontSize),
             buildPage(
                 urlImage:
                     "assets/images/on_boarding_images/onboarding_image3.png",
                 title: "Congratulations! You're Almost Home.",
                 subtitle:
-                    "From browsing to buying, we've helped hundreds of people find their dream homes. Let's make it official!"),
+                    "From browsing to buying, we've helped hundreds of people find their dream homes. Let's make it official!",
+                fontSize: fontSize),
           ],
         ),
       ),
@@ -125,9 +143,13 @@ class _OnboardingViewState extends State<OnboardingView> {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => const LoginPageView()));
                 },
-                child: const Text(
+                child: Text(
                   "Get Started",
-                  style: TextStyle(fontSize: 24, color: Colors.white, fontFamily: "Montserrat Bold"),
+                  style: TextStyle(
+                    fontSize: fontSize + 6, // Slightly larger font for the button text
+                    color: Colors.white,
+                    fontFamily: "Montserrat Bold",
+                  ),
                 ),
               ),
             )
