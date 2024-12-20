@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:nest_finder/core/app_theme/app_theme.dart';
 import 'package:nest_finder/view/onboarding_view.dart';
 
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
         splash: 'assets/images/splash_screen/nestfinder_animated_logo.gif',
         splashIconSize: 1500.0,
         centered: true,
-        nextScreen: const OnboardingView(),
+        nextScreen: const OnboardingView(), // Change this to DrawerHomepageView
         backgroundColor: Colors.white,
         duration: 2700,
       ),

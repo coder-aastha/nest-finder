@@ -3,49 +3,40 @@ import 'package:nest_finder/view/aboutpage_view.dart';
 import 'package:nest_finder/view/agentpage_view.dart';
 import 'package:nest_finder/view/contactpage_view.dart';
 import 'package:nest_finder/view/homepage_view.dart';
-import 'package:nest_finder/view/my_header_drawer_view.dart';
+import 'package:nest_finder/view/my_header_drawer_view.dart'; // Assuming this import is correct
 
-class DrawerHomePageView extends StatefulWidget {
-  const DrawerHomePageView({super.key});
+class DrawerHomepageView extends StatefulWidget {
+  const DrawerHomepageView({super.key});
 
   @override
-  State<DrawerHomePageView> createState() => _DrawerHomePageViewState();
+  State<DrawerHomepageView> createState() => _HomePageViewState();
 }
 
-class _DrawerHomePageViewState extends State<DrawerHomePageView> {
+class _HomePageViewState extends State<DrawerHomepageView> {
   // The variable to hold the current page (selected drawer item)
   DrawerSection currentPage = DrawerSection.home;
 
   @override
   Widget build(BuildContext context) {
-    // Use MediaQuery to get the screen width
-    double screenWidth = MediaQuery.of(context).size.width;
-
-    // Decide container width based on screen size
-    double containerWidth = screenWidth > 600 ? 600 : screenWidth;
-
-    // The body widget (currentPage) that gets updated when a drawer item is tapped
-    StatelessWidget container = const HomepageView(); // Default value
-    if (currentPage == DrawerSection.home) {
-      container = const HomepageView();
-    } else if (currentPage == DrawerSection.about) {
-      container = const AboutpageView();
-    } else if (currentPage == DrawerSection.contact) {
-      container = const ContactPageView();
-    } else if (currentPage == DrawerSection.agents) {
-      container = const AgentPageView();
-    }
+    // Assign the appropriate widget based on the currentPage value
+    Widget container = _getPageForCurrentSection();
 
     return Scaffold(
       appBar: AppBar(
         title: const Text("Nest Finder"),
-      ),
-      body: Center(
-        child: SizedBox(
-          width: containerWidth, // Set width based on screen size
-          child: container,
+        // Use Builder to get the right context for Scaffold.of(context)
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer(); // Opens the drawer
+              },
+            );
+          },
         ),
       ),
+      body: container, // This will display the widget based on currentPage
       drawer: Drawer(
         child: SingleChildScrollView(
           child: Column(
@@ -57,6 +48,22 @@ class _DrawerHomePageViewState extends State<DrawerHomePageView> {
         ),
       ),
     );
+  }
+
+  // Method to get the appropriate widget based on the currentPage value
+  Widget _getPageForCurrentSection() {
+    switch (currentPage) {
+      case DrawerSection.home:
+        return const HomepageView(); // Show homepage when home is selected
+      case DrawerSection.about:
+        return const AboutpageView(); // Show about page when about is selected
+      case DrawerSection.contact:
+        return const ContactPageView(); // Show contact page when contact is selected
+      case DrawerSection.agents:
+        return const AgentPageView(); // Show agent page when agents is selected
+      default:
+        return const HomepageView(); // Default page (should not happen)
+    }
   }
 
   // The DrawerListView that contains the list of items in the Drawer
@@ -105,9 +112,9 @@ class _DrawerHomePageViewState extends State<DrawerHomePageView> {
         onTap: () {
           setState(() {
             // Update the current page when an item is tapped
-            currentPage =
-                DrawerSection.values[id - 1]; // Using the correct enum value
+            currentPage = DrawerSection.values[id - 1]; // Using the correct enum value
           });
+          Navigator.pop(context); // Close the drawer after selection
         },
         child: Padding(
           padding: const EdgeInsets.all(15.0),
