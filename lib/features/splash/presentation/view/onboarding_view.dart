@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nest_finder/view/login_page_view.dart';
+import 'package:nest_finder/features/auth/presentation/view/login_page_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingView extends StatefulWidget {

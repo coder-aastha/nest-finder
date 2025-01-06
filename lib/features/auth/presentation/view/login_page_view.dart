@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nest_finder/view/homepage_view.dart';
-import 'package:nest_finder/view/signup_page_view.dart'; // Import SignUpPageView to check stored credentials
+import 'package:nest_finder/features/splash/presentation/view/homepage_view.dart';
+import 'package:nest_finder/features/auth/presentation/view/signup_page_view.dart'; // Import SignUpPageView to check stored credentials
 
 class LoginPageView extends StatefulWidget {
   const LoginPageView({super.key});

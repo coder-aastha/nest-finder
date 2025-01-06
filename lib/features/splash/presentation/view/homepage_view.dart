@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:nest_finder/view/aboutpage_view.dart';
-import 'package:nest_finder/view/agentpage_view.dart';
-import 'package:nest_finder/view/contactpage_view.dart';
-import 'package:nest_finder/view/my_header_drawer_view.dart';
+import 'package:nest_finder/features/splash/presentation/view/aboutpage_view.dart';
+import 'package:nest_finder/features/splash/presentation/view/agentpage_view.dart';
+import 'package:nest_finder/features/splash/presentation/view/contactpage_view.dart';
+import 'package:nest_finder/features/splash/presentation/view/my_header_drawer_view.dart';
 
 class HomepageView extends StatefulWidget {
   const HomepageView({super.key});
