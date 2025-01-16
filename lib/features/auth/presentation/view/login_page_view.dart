@@ -28,17 +28,16 @@ class LoginPageViewState extends State<LoginPageView> {
 
   // Method to get the user by email
   Future<UserModel> _getUserByEmail(String email) async {
-  // Look for the user with the provided email
-  final user = _userBox.values.firstWhere(
-    (user) => user.email == email,
-    orElse: () {
-      throw Exception('User not found');
-    }, // Directly throw an exception if no user is found
-  );
+    // Look for the user with the provided email
+    final user = _userBox.values.firstWhere(
+      (user) => user.email == email,
+      orElse: () {
+        throw Exception('User not found');
+      }, // Directly throw an exception if no user is found
+    );
 
-  return user;
-}
-
+    return user;
+  }
 
   // Method to adjust font size based on screen width
   double getFontSize(BuildContext context) {
@@ -91,7 +90,8 @@ class LoginPageViewState extends State<LoginPageView> {
                     image: DecorationImage(
                       image: AssetImage(
                           'assets/images/login_image.png'), // Ensure this image exists in your assets
-                      fit: BoxFit.cover, // Ensure the image covers the container
+                      fit:
+                          BoxFit.cover, // Ensure the image covers the container
                     ),
                   ),
                 ),
@@ -186,8 +186,8 @@ class LoginPageViewState extends State<LoginPageView> {
                           padding: const EdgeInsets.only(bottom: 20.0),
                           child: Text(
                             _errorMessage!,
-                            style:
-                                const TextStyle(color: Colors.red, fontSize: 14),
+                            style: const TextStyle(
+                                color: Colors.red, fontSize: 14),
                           ),
                         ),
 
@@ -225,7 +225,8 @@ class LoginPageViewState extends State<LoginPageView> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const SignUpPageView()),
+                                    builder: (context) =>
+                                        const SignUpPageView()),
                               );
                             },
                             child: Text(
