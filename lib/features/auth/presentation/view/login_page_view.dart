@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:nest_finder/features/splash/presentation/view/homepage_view.dart';
-import 'package:nest_finder/features/auth/presentation/view/signup_page_view.dart'; // Import SignUpPageView to check stored credentials
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:nest_finder/features/auth/data/model/auth_hive_model.dart';
+import 'package:nest_finder/features/auth/presentation/view/signup_page_view.dart';
+import 'package:nest_finder/features/home/presentation/view/homepage_view.dart';
 
 class LoginPageView extends StatefulWidget {
   const LoginPageView({super.key});
@@ -13,9 +15,30 @@ class LoginPageViewState extends State<LoginPageView> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late Box<UserModel> _userBox;
 
   String? _errorMessage;
   bool _isPasswordVisible = false; // To toggle password visibility
+
+  @override
+  void initState() {
+    super.initState();
+    _userBox = Hive.box<UserModel>('users');
+  }
+
+  // Method to get the user by email
+  Future<UserModel> _getUserByEmail(String email) async {
+  // Look for the user with the provided email
+  final user = _userBox.values.firstWhere(
+    (user) => user.email == email,
+    orElse: () {
+      throw Exception('User not found');
+    }, // Directly throw an exception if no user is found
+  );
+
+  return user;
+}
+
 
   // Method to adjust font size based on screen width
   double getFontSize(BuildContext context) {
@@ -75,7 +98,7 @@ class LoginPageViewState extends State<LoginPageView> {
                 SizedBox(
                     height:
                         spacingHeight), // Use dynamic spacing here based on device type
-        
+
                 // Welcome text
                 Text(
                   'Welcome Back!',
@@ -90,7 +113,7 @@ class LoginPageViewState extends State<LoginPageView> {
                   style: TextStyle(fontSize: fontSize - 10, color: Colors.grey),
                 ),
                 const SizedBox(height: 60),
-        
+
                 // Form for email and password
                 Form(
                   key: _formKey,
@@ -122,7 +145,7 @@ class LoginPageViewState extends State<LoginPageView> {
                         },
                       ),
                       const SizedBox(height: 25),
-        
+
                       // Password Field with visibility toggle
                       TextFormField(
                         controller: _passwordController,
@@ -156,7 +179,7 @@ class LoginPageViewState extends State<LoginPageView> {
                         },
                       ),
                       const SizedBox(height: 25),
-        
+
                       // Show error message if there's any
                       if (_errorMessage != null)
                         Padding(
@@ -167,7 +190,7 @@ class LoginPageViewState extends State<LoginPageView> {
                                 const TextStyle(color: Colors.red, fontSize: 14),
                           ),
                         ),
-        
+
                       // Login Button
                       ElevatedButton(
                         onPressed: _login,
@@ -187,7 +210,7 @@ class LoginPageViewState extends State<LoginPageView> {
                         ),
                       ),
                       const SizedBox(height: 20),
-        
+
                       // Don't have an account? Sign Up text
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -225,26 +248,32 @@ class LoginPageViewState extends State<LoginPageView> {
     );
   }
 
-  void _login() {
+  void _login() async {
     if (_formKey.currentState!.validate()) {
       final email = _emailController.text;
       final password = _passwordController.text;
 
-      // Check if the email and password match the registered credentials
-      if (email == SignUpPageViewState.registeredEmail &&
-          password == SignUpPageViewState.registeredPassword) {
-        // Simulate successful login
-        print('Login successful');
-        _errorMessage = null; // Clear previous errors
+      try {
+        final user = await _getUserByEmail(email);
 
-        // Navigate to the HomePageView after successful login
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomepageView()),
-        );
-      } else {
+        if (user.password == password) {
+          // Simulate successful login
+          print('Login successful');
+          _errorMessage = null; // Clear previous errors
+
+          // Navigate to the HomePageView after successful login
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomepageView()),
+          );
+        } else {
+          setState(() {
+            _errorMessage = 'Incorrect password. Please try again.';
+          });
+        }
+      } catch (e) {
         setState(() {
-          _errorMessage = 'Invalid email or password. Please try again.';
+          _errorMessage = 'User not found. Please try again.';
         });
       }
     }

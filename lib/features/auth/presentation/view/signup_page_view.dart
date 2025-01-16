@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:nest_finder/features/auth/data/model/auth_hive_model.dart';
 import 'login_page_view.dart';
 
 class SignUpPageView extends StatefulWidget {
@@ -11,83 +13,85 @@ class SignUpPageView extends StatefulWidget {
 class SignUpPageViewState extends State<SignUpPageView> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
 
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
+  late Box<UserModel> _userBox;
 
-  // Global variables to store the email and password
-  static String? registeredEmail;
-  static String? registeredPassword;
+  @override
+  void initState() {
+    super.initState();
+    _userBox = Hive.box<UserModel>('users');
+  }
 
-  // Method to adjust font size based on screen width
+  Future<void> _registerUser(String email, String password) async {
+    // Check if user already exists
+    final existingUser = _userBox.values.any((user) => user.email == email);
+    
+    if (existingUser) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email already registered!')),
+      );
+      return;
+    }
+
+    // Create and save new user
+    final newUser = UserModel(
+      email: email,
+      password: password,
+    );
+
+    await _userBox.add(newUser);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Registered successfully!')),
+    );
+
+    // Navigate to login page after successful registration
+    Future.delayed(const Duration(seconds: 1), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const LoginPageView(),
+        ),
+      );
+    });
+  }
+
+  // Your existing helper methods for responsive design
   double getFontSize(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    if (screenWidth > 600) {
-      // iPad or larger tablets (Landscape or iPad-like devices)
-      return 30.0;
-    } else {
-      // Mobile devices
-      return 24.0;
-    }
+    return screenWidth > 600 ? 30.0 : 24.0;
   }
 
-  // Method to get the SizedBox height based on the screen width
   double getSizedBoxHeight(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    if (screenWidth > 600) {
-      // For iPad or larger tablets
-      return 80.0;
-    } else {
-      // For mobile devices
-      return 50.0;
-    }
+    return screenWidth > 600 ? 80.0 : 50.0;
   }
 
-  // Method to adjust font size for "Already have an account?" text
   double getAccountFontSize(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    if (screenWidth > 600) {
-      // Larger font size for tablets
-      return 20.0;
-    } else {
-      // Smaller font size for mobile
-      return 16.0;
-    }
+    return screenWidth > 600 ? 20.0 : 16.0;
   }
 
-  // Method to adjust the space between the confirm password field and sign up button
   double getSignUpSpacing(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    if (screenWidth > 600) {
-      // For iPad or larger tablets
-      return 54.0;
-    } else {
-      // For mobile devices
-      return 24.0;
-    }
+    return screenWidth > 600 ? 54.0 : 24.0;
   }
 
-  // Method to adjust the space between the "Please register your account" and email input
   double getRegisterSpacing(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    if (screenWidth > 600) {
-      // Larger spacing for tablets
-      return 30.0;
-    } else {
-      // Smaller spacing for mobile devices
-      return 16.0;
-    }
+    return screenWidth > 600 ? 30.0 : 16.0;
   }
 
   @override
   Widget build(BuildContext context) {
-    double fontSize = getFontSize(context); // Get the appropriate font size for the screen
-    double sizedBoxHeight = getSizedBoxHeight(context); // Get the appropriate height for the SizedBox
-    double accountFontSize = getAccountFontSize(context); // Font size for the "Already have an account?" text
-    double signUpSpacing = getSignUpSpacing(context); // Space between confirm password and sign-up button
-    double registerSpacing = getRegisterSpacing(context); // Space between text and email input
+    double fontSize = getFontSize(context);
+    double sizedBoxHeight = getSizedBoxHeight(context);
+    double accountFontSize = getAccountFontSize(context);
+    double signUpSpacing = getSignUpSpacing(context);
+    double registerSpacing = getRegisterSpacing(context);
 
     return Scaffold(
       body: SafeArea(
@@ -96,52 +100,45 @@ class SignUpPageViewState extends State<SignUpPageView> {
             padding: const EdgeInsets.all(16.0),
             child: SingleChildScrollView(
               child: Column(
-                mainAxisAlignment:
-                    MainAxisAlignment.center, // Vertically center the content
-                crossAxisAlignment: CrossAxisAlignment
-                    .center, // Horizontally center the content
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Full-width and non-cut image at the top
                   Container(
-                    width:
-                        MediaQuery.of(context).size.width, // Full-width image
-                    height: MediaQuery.of(context).size.height *
-                        0.3, // Adjust the height for the image (30% of screen height)
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.3,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(
-                            'assets/images/signup_image.png'), // Ensure this image exists in your assets
-                        fit: BoxFit
-                            .cover, // Ensure the image covers the container without being cut
+                        image: AssetImage('assets/images/signup_image.png'),
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  SizedBox(
-                      height:
-                          sizedBoxHeight), // Dynamic space between image and text
+                  SizedBox(height: sizedBoxHeight),
 
-                  // Title and description
                   Text(
                     'Sign Up Here',
                     style: TextStyle(
-                        fontSize: fontSize, fontWeight: FontWeight.bold),
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.bold
+                    ),
                   ),
                   const SizedBox(height: 10),
                   Text(
                     'Please register your account',
-                    style:
-                        TextStyle(fontSize: fontSize - 10, color: Colors.grey),
+                    style: TextStyle(
+                      fontSize: fontSize - 10,
+                      color: Colors.grey
+                    ),
                   ),
-                  SizedBox(height: registerSpacing), // Dynamic space between the "Please register" text and email input
+                  SizedBox(height: registerSpacing),
 
-                  // Email Field
                   TextField(
                     controller: emailController,
                     decoration: const InputDecoration(labelText: 'Email'),
+                    keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 16),
 
-                  // Password Field
                   TextField(
                     controller: passwordController,
                     obscureText: !isPasswordVisible,
@@ -163,7 +160,6 @@ class SignUpPageViewState extends State<SignUpPageView> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Confirm Password Field
                   TextField(
                     controller: confirmPasswordController,
                     obscureText: !isConfirmPasswordVisible,
@@ -177,48 +173,38 @@ class SignUpPageViewState extends State<SignUpPageView> {
                         ),
                         onPressed: () {
                           setState(() {
-                            isConfirmPasswordVisible =
-                                !isConfirmPasswordVisible;
+                            isConfirmPasswordVisible = !isConfirmPasswordVisible;
                           });
                         },
                       ),
                     ),
                   ),
-                  SizedBox(height: signUpSpacing), // Adjusted space between confirm password and sign-up button
+                  SizedBox(height: signUpSpacing),
 
-                  // Full-width Sign Up Button
                   SizedBox(
-                    width: double.infinity, // Make the button full-width
+                    width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (passwordController.text ==
-                            confirmPasswordController.text) {
-                          // Store the email and password in memory
-                          setState(() {
-                            registeredEmail = emailController.text;
-                            registeredPassword = passwordController.text;
-                          });
-
+                        if (emailController.text.isEmpty || 
+                            passwordController.text.isEmpty || 
+                            confirmPasswordController.text.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Registered successfully!')),
+                            const SnackBar(content: Text('Please fill all fields')),
                           );
-
-                          // Navigate back to LoginPageView
-                          Future.delayed(const Duration(seconds: 1), () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginPageView(),
-                              ),
-                            );
-                          });
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Passwords do not match!')),
-                          );
+                          return;
                         }
+
+                        if (passwordController.text != confirmPasswordController.text) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Passwords do not match!')),
+                          );
+                          return;
+                        }
+
+                        _registerUser(
+                          emailController.text,
+                          passwordController.text,
+                        );
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(20.0),
@@ -231,7 +217,6 @@ class SignUpPageViewState extends State<SignUpPageView> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Already have an account? Sign In
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -262,5 +247,13 @@ class SignUpPageViewState extends State<SignUpPageView> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
   }
 }

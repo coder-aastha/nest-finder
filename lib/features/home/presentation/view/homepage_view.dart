@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:nest_finder/features/splash/presentation/view/aboutpage_view.dart';
-import 'package:nest_finder/features/splash/presentation/view/agentpage_view.dart';
-import 'package:nest_finder/features/splash/presentation/view/contactpage_view.dart';
-import 'package:nest_finder/features/splash/presentation/view/my_header_drawer_view.dart';
+import 'package:nest_finder/features/home/presentation/view_model/home_state.dart';
+import 'package:provider/provider.dart';
+import 'package:nest_finder/features/home/presentation/view/aboutpage_view.dart';
+import 'package:nest_finder/features/home/presentation/view/agentpage_view.dart';
+import 'package:nest_finder/features/home/presentation/view/contactpage_view.dart';
+import 'package:nest_finder/features/home/presentation/view/my_header_drawer_view.dart';
 
-class HomepageView extends StatefulWidget {
+class HomepageView extends StatelessWidget {
   const HomepageView({super.key});
 
   @override
-  _HomepageViewState createState() => _HomepageViewState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => HomeState(),
+      child: const _HomepageViewContent(),
+    );
+  }
 }
 
-class _HomepageViewState extends State<HomepageView> {
-  DrawerSection currentPage = DrawerSection.home;
-  bool isBuySelected = true;
+class _HomepageViewContent extends StatelessWidget {
+  const _HomepageViewContent();
 
   @override
   Widget build(BuildContext context) {
@@ -31,20 +37,22 @@ class _HomepageViewState extends State<HomepageView> {
             child: Column(
               children: [
                 const MyHeaderDrawerView(),
-                myDrawerListView(),
+                myDrawerListView(context),
               ],
             ),
           ),
         ),
       ),
-      body: _getPageForCurrentSection(),
+      body: _getPageForCurrentSection(context),
     );
   }
 
-  Widget _getPageForCurrentSection() {
+  Widget _getPageForCurrentSection(BuildContext context) {
+    final currentPage = context.watch<HomeState>().currentPage;
+    
     switch (currentPage) {
       case DrawerSection.home:
-        return _buildHomeContent();
+        return _buildHomeContent(context);
       case DrawerSection.about:
         return const AboutpageView();
       case DrawerSection.contact:
@@ -54,15 +62,14 @@ class _HomepageViewState extends State<HomepageView> {
     }
   }
 
-  Widget _buildHomeContent() {
+  Widget _buildHomeContent(BuildContext context) {
+    final homeState = context.watch<HomeState>();
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    double imageHeight =
-        screenWidth < screenHeight ? screenHeight * 0.3 : screenHeight * 0.4;
+    double imageHeight = screenWidth < screenHeight ? screenHeight * 0.3 : screenHeight * 0.4;
     double horizontalPadding = screenWidth * 0.05;
     double verticalPadding = screenHeight * 0.02;
-    double buttonWidth =
-        screenWidth < 600 ? screenWidth * 0.30 : screenWidth * 0.25;
+    double buttonWidth = screenWidth < 600 ? screenWidth * 0.30 : screenWidth * 0.25;
     double titleFontSize = screenWidth > 600 ? 26 : 20;
     double subtitleFontSize = screenWidth > 600 ? 18 : 14;
     double buttonFontSize = screenWidth > 600 ? 18 : 14;
@@ -120,16 +127,18 @@ class _HomepageViewState extends State<HomepageView> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 _buildActionButton(
+                    context,
                     "Buy",
-                    isBuySelected ? Colors.black : Colors.white,
-                    isBuySelected ? Colors.white : Colors.black,
+                    homeState.isBuySelected ? Colors.black : Colors.white,
+                    homeState.isBuySelected ? Colors.white : Colors.black,
                     buttonWidth,
                     buttonFontSize,
                     true),
                 _buildActionButton(
+                    context,
                     "Rent",
-                    isBuySelected ? Colors.white : Colors.black,
-                    isBuySelected ? Colors.black : Colors.white,
+                    homeState.isBuySelected ? Colors.white : Colors.black,
+                    homeState.isBuySelected ? Colors.black : Colors.white,
                     buttonWidth,
                     buttonFontSize,
                     false),
@@ -156,10 +165,10 @@ class _HomepageViewState extends State<HomepageView> {
                 padding: const EdgeInsets.all(12.0),
                 child: Row(
                   children: [
-                    _buildCompactInputField("Min Price", inputFieldHeight),
-                    _buildCompactInputField("Max Price", inputFieldHeight),
-                    _buildCompactInputField("Country", inputFieldHeight),
-                    _buildSearchButton(searchButtonWidth, searchButtonHeight),
+                    _buildCompactInputField(context, "Min Price", inputFieldHeight, (value) => homeState.updateMinPrice(value)),
+                    _buildCompactInputField(context, "Max Price", inputFieldHeight, (value) => homeState.updateMaxPrice(value)),
+                    _buildCompactInputField(context, "Country", inputFieldHeight, (value) => homeState.updateCountry(value)),
+                    _buildSearchButton(context, searchButtonWidth, searchButtonHeight),
                   ],
                 ),
               ),
@@ -171,38 +180,21 @@ class _HomepageViewState extends State<HomepageView> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Flexible(
-                  flex: 1,
-                  child: _buildExperienceCard(
-                      "16+",
-                      "Years of Experience",
-                      experienceCardWidth,
-                      experienceCardHeight,
-                      experienceFontSize,
-                      experienceLabelFontSize),
-                ),
-                const SizedBox(width: 12),
-                Flexible(
-                  flex: 1,
-                  child: _buildExperienceCard(
-                      "200+",
-                      "Award Gained",
-                      experienceCardWidth,
-                      experienceCardHeight,
-                      experienceFontSize,
-                      experienceLabelFontSize),
-                ),
-                const SizedBox(width: 12),
-                Flexible(
-                  flex: 1,
-                  child: _buildExperienceCard(
-                      "999+",
-                      "Property Ready",
-                      experienceCardWidth,
-                      experienceCardHeight,
-                      experienceFontSize,
-                      experienceLabelFontSize),
-                ),
+                for (var cardData in homeState.experienceCards)
+                  Flexible(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                      child: _buildExperienceCard(
+                        cardData.number,
+                        cardData.label,
+                        experienceCardWidth,
+                        experienceCardHeight,
+                        experienceFontSize,
+                        experienceLabelFontSize,
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -211,8 +203,8 @@ class _HomepageViewState extends State<HomepageView> {
     );
   }
 
-  Widget _buildActionButton(String label, Color bgColor, Color textColor,
-      double buttonWidth, double buttonFontSize, bool isBuy) {
+  Widget _buildActionButton(BuildContext context, String label, Color bgColor,
+      Color textColor, double buttonWidth, double buttonFontSize, bool isBuy) {
     return Container(
       width: buttonWidth,
       height: 50,
@@ -229,12 +221,7 @@ class _HomepageViewState extends State<HomepageView> {
         ],
       ),
       child: TextButton(
-        onPressed: () {
-          setState(() {
-            isBuySelected = isBuy;
-          });
-          print('$label button pressed');
-        },
+        onPressed: () => context.read<HomeState>().toggleBuyRent(isBuy),
         child: Text(
           label,
           style: TextStyle(
@@ -246,7 +233,7 @@ class _HomepageViewState extends State<HomepageView> {
     );
   }
 
-  Widget _buildCompactInputField(String label, double height) {
+  Widget _buildCompactInputField(BuildContext context, String label, double height, Function(String) onChanged) {
     return Expanded(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -255,9 +242,13 @@ class _HomepageViewState extends State<HomepageView> {
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.grey.withOpacity(0.5), width: 1),
         ),
-        child: Text(
-          label,
-          textAlign: TextAlign.center,
+        child: TextField(
+          onChanged: onChanged,
+          decoration: InputDecoration(
+            hintText: label,
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.zero,
+          ),
           style: const TextStyle(
             fontSize: 14,
             color: Colors.black,
@@ -267,7 +258,7 @@ class _HomepageViewState extends State<HomepageView> {
     );
   }
 
-  Widget _buildSearchButton(double searchButtonWidth, double searchButtonHeight) {
+  Widget _buildSearchButton(BuildContext context, double searchButtonWidth, double searchButtonHeight) {
     return Container(
       width: searchButtonWidth,
       height: searchButtonHeight,
@@ -276,9 +267,7 @@ class _HomepageViewState extends State<HomepageView> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: IconButton(
-        onPressed: () {
-          print("Search pressed");
-        },
+        onPressed: () => context.read<HomeState>().search(),
         icon: const Icon(
           Icons.search,
           color: Colors.white,
@@ -325,7 +314,8 @@ class _HomepageViewState extends State<HomepageView> {
     );
   }
 
-  Widget myDrawerListView() {
+  Widget myDrawerListView(BuildContext context) {
+    final homeState = context.watch<HomeState>();
     double screenWidth = MediaQuery.of(context).size.width;
     bool isTablet = screenWidth > 768;
 
@@ -337,27 +327,26 @@ class _HomepageViewState extends State<HomepageView> {
       ),
       child: Column(
         children: [
-          _buildMenuItem(1, "Home", Icons.home_max_outlined,
-              currentPage == DrawerSection.home, isTablet),
-          _buildMenuItem(2, "About", Icons.info_outline,
-              currentPage == DrawerSection.about, isTablet),
-          _buildMenuItem(3, "Contact", Icons.contact_mail_outlined,
-              currentPage == DrawerSection.contact, isTablet),
-          _buildMenuItem(4, "Agent", Icons.account_box_outlined,
-              currentPage == DrawerSection.agents, isTablet),
+          _buildMenuItem(context, 1, "Home", Icons.home_max_outlined,
+              homeState.currentPage == DrawerSection.home, isTablet),
+          _buildMenuItem(context, 2, "About", Icons.info_outline,
+              homeState.currentPage == DrawerSection.about, isTablet),
+          _buildMenuItem(context, 3, "Contact", Icons.contact_mail_outlined,
+              homeState.currentPage == DrawerSection.contact, isTablet),
+          _buildMenuItem(context, 4, "Agent", Icons.account_box_outlined,
+              homeState.currentPage == DrawerSection.agents, isTablet),
         ],
       ),
     );
   }
 
-  Widget _buildMenuItem(int id, String title, IconData icon, bool isActive, bool isTablet) {
+  Widget _buildMenuItem(BuildContext context, int id, String title, IconData icon,
+      bool isActive, bool isTablet) {
     return Material(
       color: isActive ? Colors.blue[100] : Colors.transparent,
       child: InkWell(
         onTap: () {
-          setState(() {
-            currentPage = DrawerSection.values[id - 1];
-          });
+          context.read<HomeState>().setCurrentPage(DrawerSection.values[id - 1]);
           Navigator.pop(context);
         },
         child: Container(
@@ -370,7 +359,8 @@ class _HomepageViewState extends State<HomepageView> {
             horizontal: isTablet ? 8.0 : 0.0,
           ),
           decoration: BoxDecoration(
-            borderRadius: isTablet ? BorderRadius.circular(12) : BorderRadius.circular(8),
+            borderRadius:
+                isTablet ? BorderRadius.circular(12) : BorderRadius.circular(8),
           ),
           child: Row(
             children: [
@@ -396,11 +386,4 @@ class _HomepageViewState extends State<HomepageView> {
       ),
     );
   }
-}
-
-enum DrawerSection {
-  home,
-  about,
-  contact,
-  agents,
 }
