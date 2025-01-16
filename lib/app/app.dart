@@ -1,8 +1,11 @@
-import 'package:animated_splash_screen/animated_splash_screen.dart';
+// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:nest_finder/core/app_theme/app_theme.dart';
-import 'package:nest_finder/features/splash/presentation/view/onboarding_view.dart';
+import 'package:nest_finder/features/splash/presentation/view/splash_screen_view.dart'; // Import the new splash screen
 
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -12,14 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: getApplicationTheme(),
-      home: AnimatedSplashScreen(
-        splash: 'assets/images/splash_screen/nestfinder_animated_logo.gif',
-        splashIconSize: 1500.0,
-        centered: true,
-        nextScreen: const OnboardingView(), // Change this to DrawerHomepageView
-        backgroundColor: Colors.white,
-        duration: 2700,
-      ),
+      home: const SplashScreenView(), // Use the new SplashScreen widget
     );
   }
 }
