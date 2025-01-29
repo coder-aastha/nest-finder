@@ -6,9 +6,9 @@ import 'package:nest_finder/features/auth/domain/entity/auth_entity.dart';
 
 
 abstract interface class IAuthRepository {
-  Future<Either<Failure, void>> registerStudent(AuthEntity student);
+  Future<Either<Failure, void>> registerUser(AuthEntity user);
 
-  Future<Either<Failure, String>> loginStudent(
+  Future<Either<Failure, String>> loginUser(
       String username, String password);
 
   Future<Either<Failure, String>> uploadProfilePicture(File file);

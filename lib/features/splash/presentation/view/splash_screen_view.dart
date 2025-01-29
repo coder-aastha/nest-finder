@@ -1,20 +1,42 @@
-// lib/features/splash/presentation/splash_screen.dart
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:nest_finder/features/home/presentation/view/onboarding_view.dart'; // Import the next screen
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nest_finder/features/splash/presentation/view_model/splash_cubit.dart';
 
-class SplashScreenView extends StatelessWidget {
+class SplashScreenView extends StatefulWidget {
   const SplashScreenView({super.key});
 
   @override
+  State<SplashScreenView> createState() => _SplashViewState();
+}
+
+class _SplashViewState extends State<SplashScreenView> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<SplashCubit>().init(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return AnimatedSplashScreen(
-      splash: 'assets/images/splash_screen/nestfinder_animated_logo.gif',
-      splashIconSize: 1500.0,
-      centered: true,
-      nextScreen: const OnboardingView(), // The screen that comes after splash
-      backgroundColor: Colors.white,
-      duration: 2700,
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      body: Stack(
+        children: [
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 200,  
+                  height: 200,
+                  child: Image.asset(
+                      'assets/images/splash_screen/nestfinder_animated_logo.gif'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

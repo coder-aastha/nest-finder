@@ -1,11 +1,9 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nest_finder/app/di/di.dart';
 import 'package:nest_finder/core/app_theme/app_theme.dart';
-import 'package:nest_finder/features/splash/presentation/view/splash_screen_view.dart'; // Import the new splash screen
-
-void main() {
-  runApp(const MyApp());
-}
+import 'package:nest_finder/features/splash/presentation/view/splash_screen_view.dart';
+import 'package:nest_finder/features/splash/presentation/view_model/splash_cubit.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -14,8 +12,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: getApplicationTheme(),
-      home: const SplashScreenView(), // Use the new SplashScreen widget
+      title: 'Nest Finder',
+      theme: AppTheme.getApplicationTheme(isDarkMode: false),
+      home: BlocProvider.value(
+        value: getIt<SplashCubit>(),
+        child: const SplashScreenView(),
+      ),
     );
   }
 }

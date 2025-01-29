@@ -25,6 +25,37 @@ class HomeState extends ChangeNotifier {
   String get maxPrice => _maxPrice;
   String get country => _country;
 
+  // Experience card data
+  final List<ExperienceCardData> experienceCards = [
+    ExperienceCardData(number: '16+', label: 'Years of Experience'),
+    ExperienceCardData(number: '200+', label: 'Award Gained'),
+    ExperienceCardData(number: '999+', label: 'Property Ready'),
+  ];
+
+  // Factory constructor for initial state
+  factory HomeState.initial() {
+    return HomeState(
+      currentPage: DrawerSection.home,
+      isBuySelected: true,
+      minPrice: '',
+      maxPrice: '',
+      country: '',
+    );
+  }
+
+  // Constructor
+  HomeState({
+    DrawerSection? currentPage,
+    bool? isBuySelected,
+    String? minPrice,
+    String? maxPrice,
+    String? country,
+  })  : _currentPage = currentPage ?? DrawerSection.home,
+        _isBuySelected = isBuySelected ?? true,
+        _minPrice = minPrice ?? '',
+        _maxPrice = maxPrice ?? '',
+        _country = country ?? '';
+
   // Methods to update states
   void setCurrentPage(DrawerSection page) {
     _currentPage = page;
@@ -52,19 +83,25 @@ class HomeState extends ChangeNotifier {
   }
 
   void search() {
-  //   print('Searching with:');
-  //   print('Min Price: $_minPrice');
-  //   print('Max Price: $_maxPrice');
-  //   print('Country: $_country');
-  //   print('Type: ${_isBuySelected ? "Buy" : "Rent"}');
+    // Placeholder for search logic if necessary
   }
 
-  // Experience card data
-  final List<ExperienceCardData> experienceCards = [
-    ExperienceCardData(number: '16+', label: 'Years of Experience'),
-    ExperienceCardData(number: '200+', label: 'Award Gained'),
-    ExperienceCardData(number: '999+', label: 'Property Ready'),
-  ];
+  // CopyWith method to return a new state
+  HomeState copyWith({
+    DrawerSection? currentPage,
+    bool? isBuySelected,
+    String? minPrice,
+    String? maxPrice,
+    String? country,
+  }) {
+    return HomeState(
+      currentPage: currentPage ?? _currentPage,
+      isBuySelected: isBuySelected ?? _isBuySelected,
+      minPrice: minPrice ?? _minPrice,
+      maxPrice: maxPrice ?? _maxPrice,
+      country: country ?? _country,
+    );
+  }
 }
 
 // Data class for experience cards

@@ -9,15 +9,17 @@ sealed class RegisterEvent extends Equatable {
 
 class LoadCoursesAndBatches extends RegisterEvent {}
 
-class RegisterStudent extends RegisterEvent {
+class RegisterUser extends RegisterEvent {
   final BuildContext context;
   final String username;
+  final String email;
   final String password;
   final String confirmPassword;
 
-  const RegisterStudent({
+  const RegisterUser({
     required this.context,
     required this.username,
+    required this.email,
     required this.password,
     required this.confirmPassword,
   });
