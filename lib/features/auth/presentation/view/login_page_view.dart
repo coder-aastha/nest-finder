@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nest_finder/features/auth/presentation/view/signup_page_view.dart';
 import 'package:nest_finder/features/auth/presentation/view_model/login/login_bloc.dart';
+import 'package:nest_finder/features/home/presentation/view/homepage_view.dart';
 
 class LoginPageView extends StatefulWidget {
   const LoginPageView({super.key});
@@ -65,7 +66,7 @@ class _LoginViewState extends State<LoginPageView> {
                               controller: _usernameController,
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(
-                                  Icons.email,
+                                  Icons.person,
                                   size: 20,
                                   color: Colors.black,
                                 ),
@@ -171,7 +172,12 @@ class _LoginViewState extends State<LoginPageView> {
                                             password: _passwordController.text,
                                           ),
                                         );
-
+                                    context.read<LoginBloc>().add(
+                                          NavigateHomeScreenEvent(
+                                            destination: const HomepageView(),
+                                            context: context,
+                                          ),
+                                        );
                                   }
                                 },
                                 child: const Text(
