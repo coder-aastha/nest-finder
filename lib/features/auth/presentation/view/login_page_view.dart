@@ -12,8 +12,8 @@ class LoginPageView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginPageView> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController(text: '');
-  final _passwordController = TextEditingController(text: '');
+  final _usernameController = TextEditingController(text: 'aastha');
+  final _passwordController = TextEditingController(text: '111111');
   bool _isPasswordVisible = false;
   String? _errorMessage;
 

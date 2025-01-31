@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:nest_finder/app/shared_prefs/token_shared_pref.dart';
 import 'package:nest_finder/core/network/api_service.dart';
 import 'package:nest_finder/core/network/hive_service.dart';
 import 'package:nest_finder/features/auth/data/data_source/local_data_source/auth_local_datasource.dart';
@@ -12,6 +13,7 @@ import 'package:nest_finder/features/auth/presentation/view_model/login/login_bl
 import 'package:nest_finder/features/auth/presentation/view_model/signup/register_bloc.dart';
 import 'package:nest_finder/features/home/presentation/view_model/home_cubit.dart';
 import 'package:nest_finder/features/splash/presentation/view_model/splash_cubit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.instance;
 
@@ -19,7 +21,7 @@ Future<void> initDependencies() async {
   // First initialize hive service
   await _initHiveService();
   await _initApiService();
-
+  await _initSharedPreferences();
   await _initHomeDependencies();
   await _initRegisterDependencies();
   await _initLoginDependencies();
@@ -27,11 +29,16 @@ Future<void> initDependencies() async {
   await _initSplashScreenDependencies();
 }
 
+Future<void> _initSharedPreferences() async {
+  final sharedPreferences = await SharedPreferences.getInstance();
+  getIt.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
+}
+
 _initHiveService() {
   getIt.registerLazySingleton<HiveService>(() => HiveService());
 }
 
-_initApiService(){
+_initApiService() {
   getIt.registerLazySingleton<Dio>(
     () => ApiService(Dio()).dio,
   );
@@ -57,9 +64,7 @@ _initRegisterDependencies() {
 
   // init remote repository
   getIt.registerLazySingleton(
-    () => AuthRemoteRepository(
-      getIt<AuthRemoteDataSource>()
-      ),
+    () => AuthRemoteRepository(getIt<AuthRemoteDataSource>()),
   );
 
   // register use usecase
@@ -68,7 +73,7 @@ _initRegisterDependencies() {
   //     getIt<AuthLocalRepository>(),
   //   ),
   // );
-   getIt.registerLazySingleton<RegisterUseCase>(
+  getIt.registerLazySingleton<RegisterUseCase>(
     () => RegisterUseCase(
       getIt<AuthRemoteRepository>(),
     ),
@@ -81,7 +86,6 @@ _initRegisterDependencies() {
   );
 }
 
-
 _initHomeDependencies() async {
   getIt.registerFactory<HomeCubit>(
     () => HomeCubit(),
@@ -89,15 +93,16 @@ _initHomeDependencies() async {
 }
 
 _initLoginDependencies() async {
-  // getIt.registerLazySingleton<LoginUseCase>(
-  //   () => LoginUseCase(
-  //     getIt<AuthLocalRepository>(),
-  //   ),
-  // );
+  // =========================== Token Shared Preferences ===========================
+  getIt.registerLazySingleton<TokenSharedPrefs>(
+    () => TokenSharedPrefs(getIt<SharedPreferences>()),
+  );
 
+  // =========================== Usecases ===========================
   getIt.registerLazySingleton<LoginUseCase>(
     () => LoginUseCase(
       getIt<AuthRemoteRepository>(),
+      getIt<TokenSharedPrefs>(),
     ),
   );
 
