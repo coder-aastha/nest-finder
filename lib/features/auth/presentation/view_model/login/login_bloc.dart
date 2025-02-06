@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nest_finder/core/common/snackbar/my_snackbar.dart';
 import 'package:nest_finder/features/auth/domain/use_case/login_usecase.dart';
 import 'package:nest_finder/features/auth/presentation/view_model/signup/register_bloc.dart';
-import 'package:nest_finder/features/home/presentation/view/homepage_view.dart';
+import 'package:nest_finder/features/home/presentation/view/home/homepage_view.dart';
 import 'package:nest_finder/features/home/presentation/view_model/home_cubit.dart';
 
 part 'login_event.dart';
