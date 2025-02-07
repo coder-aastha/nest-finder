@@ -55,7 +55,7 @@ class AuthHiveModel extends Equatable {
       username: username,
       email: email,
       password: password,
-      avatar: avatar, // ✅ Map avatar
+      avatar: avatar, //
     );
   }
 

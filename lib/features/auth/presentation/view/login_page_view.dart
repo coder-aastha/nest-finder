@@ -15,7 +15,6 @@ class _LoginViewState extends State<LoginPageView> {
   final _usernameController = TextEditingController(text: 'aastha');
   final _passwordController = TextEditingController(text: '111111');
   bool _isPasswordVisible = false;
-  String? _errorMessage;
 
   final _gap = const SizedBox(height: 25);
 
@@ -25,7 +24,6 @@ class _LoginViewState extends State<LoginPageView> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Logo Section
               Container(
@@ -39,7 +37,6 @@ class _LoginViewState extends State<LoginPageView> {
               ),
               // Login Form Section
               Container(
-                height: MediaQuery.of(context).size.height * 0.6,
                 width: double.infinity,
                 color: Colors.white,
                 child: Padding(
@@ -52,6 +49,7 @@ class _LoginViewState extends State<LoginPageView> {
                           children: [
                             const Text(
                               'Log In',
+                              key: Key('logInTitle'),
                               style: TextStyle(
                                 fontFamily: 'Junge',
                                 fontSize: 28,
@@ -59,7 +57,7 @@ class _LoginViewState extends State<LoginPageView> {
                               ),
                             ),
                             const SizedBox(height: 40),
-                            // Email Field
+                            // Username Field
                             TextFormField(
                               key: const ValueKey('username'),
                               controller: _usernameController,
@@ -69,7 +67,7 @@ class _LoginViewState extends State<LoginPageView> {
                                   size: 20,
                                   color: Colors.black,
                                 ),
-                                labelText: 'username',
+                                labelText: 'Username',
                                 hintText: 'aastha',
                                 hintStyle: const TextStyle(
                                   color: Color.fromARGB(255, 162, 158, 158),
@@ -128,19 +126,6 @@ class _LoginViewState extends State<LoginPageView> {
                               },
                             ),
                             const SizedBox(height: 10),
-                            // Error Message
-                            if (_errorMessage != null)
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 20.0),
-                                child: Text(
-                                  _errorMessage!,
-                                  style: const TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            const SizedBox(height: 2),
                             // Forgot Password
                             Align(
                               alignment: Alignment.centerRight,
@@ -164,6 +149,7 @@ class _LoginViewState extends State<LoginPageView> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
+                                    // Proceed with login if validation succeeds
                                     context.read<LoginBloc>().add(
                                           LoginUserEvent(
                                             context: context,

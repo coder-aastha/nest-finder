@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,9 +15,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   RegisterBloc({
     required RegisterUseCase registerUseCase,
   })  : _registerUseCase = registerUseCase,
-        super(RegisterState.initial()) {
+        super(const RegisterState.initial()) {
     on<RegisterUser>(_onRegisterEvent);
-
   }
 
   void _onRegisterEvent(
