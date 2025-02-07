@@ -27,7 +27,7 @@ class _SplashViewState extends State<SplashScreenView> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: 200,  
+                  width: 200,
                   height: 200,
                   child: Image.asset(
                       'assets/images/splash_screen/nestfinder_animated_logo.gif'),
