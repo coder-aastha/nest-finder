@@ -1,16 +1,35 @@
-# nest_finder
+# 🏡 NestFinder - A Real Estate Marketplace
 
-A new Flutter project.
+NestFinder is a dynamic real estate marketplace that allows users to explore, list, and manage property postings seamlessly. The platform provides a user-friendly experience for individuals looking to buy, sell, or save properties of interest.
 
-## Getting Started
+## 🚀 Features
 
-This project is a starting point for a Flutter application.
+### 🔐 User Authentication  
+- Secure login & registration required to access features.  
+- Personalized user experience with protected data.  
 
-A few resources to get you started if this is your first Flutter project:
+### 📢 Property Listings  
+- Users can **create**, **edit**, and **delete** their own property listings.  
+- Each listing includes property details like images, price, and description.  
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 🔎 Search & Filtering  
+- Users can **search** for properties based on **name**.  
+- Advanced **price range filtering** to refine property searches.  
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### ❤️ Wishlist & Profile  
+- Users can **save properties to their wishlist** for future reference.  
+- Wishlist and personal posts are displayed in the **user profile**.  
+
+### 🌍 Explore & Interact  
+- Users can browse listings posted by others.  
+- Well-structured dashboard to manage listings and saved properties.  
+
+## 🛠️ Installation & Setup
+
+1. **Clone the repository**  
+   ```sh
+   git clone  https://github.com/coder-aastha/nest-finder.git
+
+   cd nest-finder
+
+
