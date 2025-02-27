@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nest_finder/features/agent/data/models/agent_model.dart';
+import 'package:nest_finder/features/agent/data/model/agent_model.dart';
 
 class AgentViewModel extends ChangeNotifier {
   List<Agent> _agents = [];

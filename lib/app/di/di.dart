@@ -4,6 +4,7 @@ import 'package:nest_finder/app/shared_prefs/token_shared_pref.dart';
 import 'package:nest_finder/core/common/internet_checker/internet_checker.dart';
 import 'package:nest_finder/core/network/api_service.dart';
 import 'package:nest_finder/core/network/hive_service.dart';
+import 'package:nest_finder/features/about/presentation/view_model/about_view_model.dart';
 import 'package:nest_finder/features/auth/data/data_source/local_data_source/auth_local_datasource.dart';
 import 'package:nest_finder/features/auth/data/data_source/remote_data_source/auth_remote_data_source.dart';
 import 'package:nest_finder/features/auth/data/repository/auth_local_repository/auth_local_repository.dart';
@@ -35,6 +36,7 @@ Future<void> initDependencies() async {
   await _initContactPageDependencies();
   await _initAgentPageDependencies();
   await _initPropertySearchDependencies();
+  await _initAboutDependencies(); // ✅ Added About Feature
 }
 
 Future<void> _initSharedPreferences() async {
@@ -121,4 +123,22 @@ Future<void> _initPropertySearchDependencies() async {
         () => FetchFilteredPropertiesUseCase(getIt<PropertyRepository>()))
     ..registerFactory<PropertySearchViewModel>(
         () => PropertySearchViewModel(getIt<FetchFilteredPropertiesUseCase>()));
+}
+
+/// ✅ **NEW: Initialize About Feature Dependencies**
+Future<void> _initAboutDependencies() async {
+  getIt
+    ..registerLazySingleton<AboutLocalDataSource>(
+        () => AboutLocalDataSourceImpl(sharedPreferences: getIt()))
+    ..registerLazySingleton<AboutRemoteDataSource>(
+        () => AboutRemoteDataSourceImpl(client: getIt<Dio>()))
+    ..registerLazySingleton<AboutRepository>(
+        () => AboutRepositoryImpl(
+              remoteDataSource: getIt<AboutRemoteDataSource>(),
+              localDataSource: getIt<AboutLocalDataSource>(),
+            ))
+    ..registerLazySingleton<GetAboutUseCase>(
+        () => GetAboutUseCase(repository: getIt<AboutRepository>()))
+    ..registerFactory<AboutViewModel>(
+        () => AboutViewModel(getIt<GetAboutUseCase>()));
 }
